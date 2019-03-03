@@ -34,19 +34,8 @@ if __name__ == '__main__':
     #################################
     if params == {}:
         # Catergorys
-        list_item = xbmcgui.ListItem(label='Categories')
-        url = helper.get_url(_url, action='category')
-        is_folder = True
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
-
-        # Search
-        list_item = xbmcgui.ListItem(label='Search')
-        url = helper.get_url(_url, action='search')
-        is_folder = True
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
-
-        # endOfDirectory
-        xbmcplugin.endOfDirectory(_handle)
+        categories = chaturbate.get_cats()
+        helper.list_categories(_url, _handle, categories)
         quit()
 
     #################################
@@ -67,24 +56,6 @@ if __name__ == '__main__':
         chaturbate.play_video(_handle, params['video'])
         quit()
 
-    #################################
-    #            search             #
-    #################################
-    if params['action'] == 'search':
-        s_therm = helper.get_search()
-        link = 'https://www.chaturbate.com/?k=' + s_therm
-        videos = chaturbate.get_vids(link, 'search')
-        has_next = True
-        helper.list_videos(_handle, _url, videos, link, 'search', has_next)
-        quit()
-
-    #################################
-    #            category           #
-    #################################
-    if params['action'] == 'category':
-        categories = chaturbate.get_cats()
-        helper.list_categories(_url, _handle, categories)
-        quit()
 
     #################################
     #              next             #

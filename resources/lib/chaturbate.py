@@ -18,16 +18,16 @@ and returns them as a list of dicts
  {'category': '3d', 'link': 'https://xvideos.com/?k=3d&top'}]
 '''
 def get_cats():
-	url = 'https://xvideos.com/'
+	url = 'https://chaturbate.com'
 	cats = []
 	soup = helper.get_soup(url)
-	divs = soup.find(id="main-cat-sub-list")
+	ul = soup.find("ul", class_="sub-nav")
 
-	for div in divs.find_all('a', href=True): 
+	for li in ul.find_all("li"): 
 		cats.append(
 			dict([
-				('category', div.text.lstrip(' ')),
-				('link', url[:-1] + div.get('href'))
+				('category', li.text),
+				('link', url + li.a.get('href'))
 			]))
 
 	return cats
@@ -100,11 +100,9 @@ def play_video(_handle, video):
     :type path: str
     """
     soup = helper.get_soup(video)
-  
-	script_tags = soup.find_all("script", type="text/javascript") 
-
-	tag_split = script_tags[18].string.split("jsplayer, '")[-1] #take the 18th and hope
-	link = tag_split.split("'")[0]
+    script_tags = soup.find_all("script", type="text/javascript") 
+    tag_split = script_tags[18].string.split("jsplayer, '")[-1] #take the 18th and hope
+    link = tag_split.split("'")[0]
 
     # Create a playable item with a path to play.
     play_item = xbmcgui.ListItem(path=link)
