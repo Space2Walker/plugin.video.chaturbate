@@ -36,16 +36,16 @@ def get_cats():
 #			get_vids			#
 #################################
 '''
-crawls a given url form xvideos.com for videos
+crawls a given url form chaturbate.com for videos
 and returns them as a list of dicts
 if a catergory is given it will be added to the dict
 
 a returnd dict looks like this
 	 KEYS	 VALUE 
 [{ 'title': 'BF HAVE 8 INC BUT YOUR ', 
-    'link': 'https://xvideos.com/video45543479/nasty_girl_masturbate',
+    'link': 'https://chaturbate.com/nasty_girl_masturbate',
 'duration': '5 min', 
-   'thumb': 'https://img-hw.xvideos-cdn.com/videos/thumbs169/a3/ed/36/a3ed367bcb5b699a6cf8eaa80a70a9ad/a3ed367bcb5b699a6cf8eff80a69a9ad.14.jpg', 
+   'thumb': 'https://img-hw.com/videos/thumbs169/a3/ed/36/a3ed367bcb5a69a9ad.14.jpg', 
      'res': '720p', 
    'views': '13k',
 'uploader': 'hans',
@@ -53,59 +53,40 @@ a returnd dict looks like this
 '''
 def get_vids(url, category='none'):
 
-	hardcoded = 'https://xvideos.com'
+	hardcoded = 'https://chaturbate.com'
 	video_info = []
 	videos = [] 
+
 	soup = helper.get_soup(url)
 
-	#####################
-	# get the video div and make a dict from both divs inside
-
-	video_div = soup.find_all("div", class_="thumb-block")
-
-	for video in video_div: 
-	
-		videos.append( 
-			dict([('under', video.find("div", class_="thumb-under")),
-				('inside', video.find("div", class_="thumb-inside"))
-				]))
-
-	############################################
-	# get the infos from the dict and make the final info dict
+	videos = soup.find_all("li", class_="room_list_room")
 
 	for info in videos:
-    
-		inside = info['inside']
-		under = info['under']
+		res = ''
+		title = info.find("a", href=True).get('href')[1:-1]
+		uploader = info.find("a", href=True).get('href')
+		img = info.find("a", href=True).find('img').get('src')
 
-		title = under.find("a", href=True)
-		duration = helper.convert_duration(under.find("span", class_="duration").text)
-		views = under.find("span", class_="sprfluous").nextSibling
+		# views and time are only seperatot bei "," on the site
+		duraview = info.find("li", class_="cams").text.split(",")
+		views = duraview[1]
 
+		if duraview[0].find("h") != -1:  #
+			h = float(duraview[0][:-4])
+			duration = (h * 60) * 60
 		
-		try:
-			uploader = under.find("span", class_="name").text
-		except AttributeError:
-			views = under.find("span", class_="duration").nextSibling
-			uploader = "Unknown"
-	
-		img = inside.find("div", class_="thumb").find('img')
-		res_tag = inside.find(class_="video-hd-mark")
-
-		try:
-			res = res_tag.text
-		except AttributeError:
-			res = ''
+		else: 
+			duration = int(duraview[0][:-5]) * 60
 
 		video_info.append(
 			dict([
-				('title', title.get('title')),
-				('link', hardcoded + title.get('href')),
-				('duration', duration),
-				('thumb', img.get('data-src')),
+				('title', title),
+				('link',  hardcoded + uploader),
+				('duration', int(duration)),
+				('thumb', img),
 				('res', res),
-				('views', views[1:]),
-				('uploader', uploader),
+				('views', views),
+				('uploader', title),
 				('category', category)
 				]))
 	return video_info
