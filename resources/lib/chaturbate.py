@@ -100,16 +100,14 @@ def play_video(_handle, video):
     :type path: str
     """
     soup = helper.get_soup(video)
-    
-    div = soup.find("div", id="video-player-bg")            #find div
-    script_tag = div.find_all("script")[4]                  #find script tag in div
-    
-    tmp = script_tag.string.split("setVideoHLS('")[-1]      #cleanup request
-    m3u_link = tmp.split("')", 1)[0]
+  
+	script_tags = soup.find_all("script", type="text/javascript") 
 
+	tag_split = script_tags[18].string.split("jsplayer, '")[-1] #take the 18th and hope
+	link = tag_split.split("'")[0]
 
     # Create a playable item with a path to play.
-    play_item = xbmcgui.ListItem(path=m3u_link)
+    play_item = xbmcgui.ListItem(path=link)
     # Pass the item to the Kodi player.
     xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
 
