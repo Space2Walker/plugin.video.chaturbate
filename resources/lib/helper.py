@@ -145,17 +145,14 @@ def list_videos(_handle, _url, videos, link, category, next, page=1):
 
     # Iterate through videos.
     for video in videos:
-        #set resolution Tag if res is available
-        if video['res'] != '':
-            title = '[' + video['res'] + '] ' + video['title'] 
-
-        else:
-            title = video['title']
+        #set viewers Tag for sorting
+        
+        title = '[' + video['views'] + '] ' + video['title'] 
 
         # Create a list item with a text label and a thumbnail image.
         list_item = xbmcgui.ListItem(label=title)
         # builduing the description from views and uploader
-        plot = "Views: " + str(video['views']) + "\nUploader: " + str(video['uploader'])
+        plot = ""
         # Set additional info for the list item.
         # 'mediatype' is needed for skin to display info for this ListItem correctly.
         list_item.setInfo('video', {'title': title, 
@@ -179,8 +176,7 @@ def list_videos(_handle, _url, videos, link, category, next, page=1):
         xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
 
     # Add sort methods for the virtual folder items 
-    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_VIDEO_SORT_TITLE_IGNORE_THE)
-    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_TITLE)
+    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_TITLE)     
     xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_DURATION)
     # Finish creating a virtual folder.
     xbmcplugin.endOfDirectory(_handle)
