@@ -71,18 +71,18 @@ def get_vids(url, category='none'):
 		duraview = info.find("li", class_="cams").text.split(",")
 		views = duraview[1]
 
-		if duraview[0].find("h") != -1:  #
-			h = float(duraview[0][:-4])
-			duration = (h * 60) * 60
+		#if duraview[0].find("h") != -1:  #
+		#	h = float(duraview[0][:-4])
+		#	duration = (h * 60) * 60
 		
-		else: 
-			duration = int(duraview[0][:-5]) * 60
+		#else: 
+		#	duration = duraview[0][:-5] * 60
 
 		video_info.append(
 			dict([
 				('title', title),
 				('link',  hardcoded + uploader),
-				('duration', int(duration)),
+				('duration', 0),
 				('thumb', img),
 				('res', res),
 				('views', views),

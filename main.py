@@ -44,7 +44,7 @@ if __name__ == '__main__':
     if params['action'] == 'listing':
         # Display the list of videos in a provided category.
         videos = chaturbate.get_vids(params['link'], params['category'])
-        has_next = False
+        has_next = True
         helper.list_videos(_handle, _url, videos, params['link'], params['category'], has_next)
         quit()
 
@@ -61,17 +61,17 @@ if __name__ == '__main__':
     #              next             #
     #################################
     if params['action'] == 'next':
-        # ads a &p= at first and raises the page number every call
+        # ads a ?page= at first and raises the page number every call
   
         if params['page'] == '1':
-            url = params['link'] + '&p=' + str(params['page'])
+            url = params['link'] + '?page=' + str(int(params['page']) + 1)
         else:     
             url = params['link'] + str(params['page'])
     
         page = int(params['page']) + 1
         videos = chaturbate.get_vids(url, params['category'])
         has_next = True
-        helper.list_videos(_handle, _url, videos, url, params['category'], has_next, page )
+        helper.list_videos(_handle, _url, videos, url, params['category'], has_next, page)
         quit()
 
     #################################
