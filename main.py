@@ -53,7 +53,7 @@ if __name__ == '__main__':
     #################################
     if params['action'] == 'play':
         # Play a video from a provided URL.
-        chaturbate.play_video(_handle, params['video'])
+        chaturbate.play_video(_handle, params['link'])
         quit()
 
 

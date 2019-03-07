@@ -130,18 +130,7 @@ def list_videos(_handle, _url, videos, link, category, next, page=1):
     # Set plugin content. It allows Kodi to select appropriate views
     # for this type of content.
     xbmcplugin.setContent(_handle, 'videos')
-    ##############################################
-    #                Next
-    if next == True:
-        list_item = xbmcgui.ListItem(label='Next')
     
-        url = get_url(_url, action='next', link=link, page=page ,category=category)
-        # is_folder = True means that this item opens a sub-list of lower level items.
-        is_folder = True
-
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
-    #
-    #############################################
 
     # Iterate through videos.
     for video in videos:
@@ -168,12 +157,26 @@ def list_videos(_handle, _url, videos, link, category, next, page=1):
         list_item.setProperty('IsPlayable', 'true')
         # Create a URL for a plugin recursive call.
         # Example: plugin://plugin.video.example/?action=play&video=http://www.vidsplay.com/wp-content/uploads/2017/04/crab.mp4
-        url = get_url(_url, action='play', video=video['link'])
+
+        url = get_url(_url, action='play', link=video['link'])
         # Add the list item to a virtual Kodi folder.
         # is_folder = False means that this item won't open any sub-list.
         is_folder = False
         # Add our item to the Kodi virtual folder listing.
         xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
+
+    ##############################################
+    #                Next
+    if next == True:
+        list_item = xbmcgui.ListItem(label='Next')
+    
+        url = get_url(_url, action='next', link=link, page=page ,category=category)
+        # is_folder = True means that this item opens a sub-list of lower level items.
+        is_folder = True
+
+        xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
+    #
+    #############################################
 
     # Add sort methods for the virtual folder items 
     xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_TITLE)     
