@@ -96,15 +96,11 @@ def play_video(_handle, video):
     :param path: Fully-qualified video URL
     :type path: str
     """
-
+	print(video)
 	soup = helper.get_soup(video)
 
-	pattern = r"""initHlsPlayer\(jsplayer,\s*["']([^'"]+)"""
-	link = re.findall(pattern, soup)[0]
-
-	# script_tags = soup.find_all("script", type="text/javascript", src=False)
-	# tag_split = script_tags[7].string.split("jsplayer, '")[-1] #take the 18th and hope
-	# link = tag_split.split("'")[0]
+	pattern = r"https.*\.m3u8"
+	link = re.findall(pattern, str(soup))[0].replace(r'\u002D', '-')
 
 	# Create a playable item with a path to play.
 	play_item = xbmcgui.ListItem(path=link)
