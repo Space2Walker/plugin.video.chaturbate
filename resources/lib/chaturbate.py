@@ -48,7 +48,7 @@ def get_vids(url, category='none'):
 	   'views': '13k',
 	'uploader': 'hans',
 	'category': 'Grany'}]
-    """
+	"""
 
 	hardcoded = 'https://chaturbate.com'
 	video_info = []
@@ -91,18 +91,18 @@ def get_vids(url, category='none'):
 
 def play_video(_handle, video):
 	"""
-    Play a video by the provided path.
+	Play a video by the provided path.
 
-    :param path: Fully-qualified video URL
-    :type path: str
-    """
-	print(video)
+	:param path: Fully-qualified video URL
+	:type path: str
+	"""
+
 	soup = helper.get_soup(video)
-
-	pattern = r"https.*\.m3u8"
+	pattern = r"""https.*\.m3u8"""
 	link = re.findall(pattern, str(soup))[0].replace(r'\u002D', '-')
 
 	# Create a playable item with a path to play.
 	play_item = xbmcgui.ListItem(path=link)
+
 	# Pass the item to the Kodi player.
 	xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
