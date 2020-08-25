@@ -4,8 +4,6 @@
 # License: GPL v.3 https://www.gnu.org/copyleft/gpl.html
 
 import sys
-import xbmcgui
-import xbmcplugin
 import resources.lib.chaturbate as chaturbate
 import resources.lib.helper as helper
 from urlparse import parse_qsl
