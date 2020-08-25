@@ -7,13 +7,13 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 import requests
-from urllib import urlencode
+from urllib.parse import urlencode
 from bs4 import BeautifulSoup
 
 #################################
 #           get_soup            #
 #################################
-# takes a url and makes a soup 
+# takes a url and makes a soup
 
 def get_soup(url):
     req = requests.get(url)
@@ -90,7 +90,7 @@ def list_categories(_url, _handle, categories):
     # for this type of content.
     xbmcplugin.setContent(_handle, 'videos')
     # Get video categories
-    
+
     # Iterate through categories
     for category in categories:
         # Create a list item with a text label and a thumbnail image.
@@ -130,25 +130,25 @@ def list_videos(_handle, _url, videos, link, category, next, page=1):
     # Set plugin content. It allows Kodi to select appropriate views
     # for this type of content.
     xbmcplugin.setContent(_handle, 'videos')
-    
+
 
     # Iterate through videos.
     for video in videos:
-        #set viewers Tag for sorting
-        
-        title = '[' + video['views'] + '] ' + video['title'] 
+		# set viewers Tag for sorting
 
-        # Create a list item with a text label and a thumbnail image.
-        list_item = xbmcgui.ListItem(label=title)
-        # builduing the description from views and uploader
-        plot = ""
-        # Set additional info for the list item.
-        # 'mediatype' is needed for skin to display info for this ListItem correctly.
-        list_item.setInfo('video', {'title': title, 
-                                    'sorttitle': video['title'],
-                                    'duration': video['duration'],
-                                    'plot': plot,
-                                    'mediatype': 'video'})
+		title = '[' + video['views'] + '] ' + video['title']
+
+		# Create a list item with a text label and a thumbnail image.
+		list_item = xbmcgui.ListItem(label=title)
+		# builduing the description from views and uploader
+		plot = ""
+		# Set additional info for the list item.
+		# 'mediatype' is needed for skin to display info for this ListItem correctly.
+		list_item.setInfo('video', {'title': title,
+									'sorttitle': video['title'],
+									'duration': video['duration'],
+									'plot': plot,
+									'mediatype': 'video'})
         # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for the list item.
         # Here we use the same image for all items for simplicity's sake.
         list_item.setArt({'thumb': video['thumb'], 'icon': video['thumb'], 'poster': video['thumb'], 'fanart': video['thumb']})
@@ -168,18 +168,19 @@ def list_videos(_handle, _url, videos, link, category, next, page=1):
     ##############################################
     #                Next
     if next == True:
-        list_item = xbmcgui.ListItem(label='Next')
-    
-        url = get_url(_url, action='next', link=link, page=page ,category=category)
-        # is_folder = True means that this item opens a sub-list of lower level items.
-        is_folder = True
+		list_item = xbmcgui.ListItem(label='Next')
 
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
-    #
-    #############################################
+		url = get_url(_url, action='next', link=link, page=page,
+					  category=category)
+		# is_folder = True means that this item opens a sub-list of lower level items.
+		is_folder = True
 
-    # Add sort methods for the virtual folder items 
-    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_TITLE)     
-    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_DURATION)
-    # Finish creating a virtual folder.
-    xbmcplugin.endOfDirectory(_handle)
+		xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
+	#
+	#############################################
+
+	# Add sort methods for the virtual folder items
+	xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_TITLE)
+	xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_DURATION)
+	# Finish creating a virtual folder.
+	xbmcplugin.endOfDirectory(_handle)
