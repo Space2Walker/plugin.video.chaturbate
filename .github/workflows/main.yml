@@ -4,10 +4,10 @@ name: Kodi-Addon-Check
 on:
   push:
     branches:
-      - leia
+      - matrix
   pull_request:
     branches:
-      - leia
+      - matrix
 
 jobs:
   test:
@@ -28,8 +28,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install kodi-addon-checker
 
-      - name: Check LEIA
-        run: kodi-addon-checker --branch leia
+      - name: Check MATRIX
+        run: kodi-addon-checker --branch Matrix
 
   deploy:
     name: Deploy Addon

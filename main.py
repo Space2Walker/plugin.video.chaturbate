@@ -6,7 +6,7 @@
 import sys
 import resources.lib.chaturbate as chaturbate
 import resources.lib.helper as helper
-from urlparse import parse_qsl
+from urllib.parse import parse_qsl
 
 # Get the plugin url in plugin:// notation.
 _url = sys.argv[0]
@@ -81,4 +81,3 @@ if __name__ == '__main__':
 	# we raise an exception. This helps to catch coding errors,
 	# e.g. typos in action names.
 	raise ValueError('Invalid paramstring: {0}!'.format(paramstring))
-	quit()
