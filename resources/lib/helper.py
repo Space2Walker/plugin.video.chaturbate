@@ -16,31 +16,31 @@ from bs4 import BeautifulSoup
 # takes a url and makes a soup
 
 def get_soup(url):
-    req = requests.get(url)
-    soup = BeautifulSoup(req.text, "html.parser")
-    req.close()
+	req = requests.get(url)
+	soup = BeautifulSoup(req.text, "html.parser")
+	req.close()
 
-    return soup
+	return soup
 
 #################################
 #        convert_duration       #
 #################################
 # takes a duration like "1 h 53 min" and converts it to seconds.
 def convert_duration(duration):
-    if duration.find("h") != -1:  #
-        h = int(duration[0])
-        inta = duration[4:-4]
-        minute = int(duration[4:-4]) + (h * 60)
-        duration = minute * 60
-        return duration #in seconds
+	if duration.find("h") != -1:  #
+		h = int(duration[0])
+		inta = duration[4:-4]
+		minute = int(duration[4:-4]) + (h * 60)
+		duration = minute * 60
+		return duration  # in seconds
 
-    if duration.find("min") != -1:
-        duration = int(duration[:-4]) * 60
-        return duration #in seconds
+	if duration.find("min") != -1:
+		duration = int(duration[:-4]) * 60
+		return duration  # in seconds
 
-    if duration.find("sec") != -1:
-        duration = int(duration[:-4])
-        return duration #in seconds
+	if duration.find("sec") != -1:
+		duration = int(duration[:-4])
+		return duration  # in seconds
 
 
 #################################
@@ -54,8 +54,10 @@ Create a URL for calling the plugin recursively from the given set of keyword ar
 :return: plugin call URL
 :rtype: str
 '''
+
+
 def get_url(_url, **kwargs):
-   return '{0}?{1}'.format(_url, urlencode(kwargs))
+	return '{0}?{1}'.format(_url, urlencode(kwargs))
 
 
 #################################
@@ -64,16 +66,16 @@ def get_url(_url, **kwargs):
 # opens a kodi text Dialog and returns the Input
 
 def get_search():
-    kb = xbmc.Keyboard('default', 'heading')
-    kb.setDefault('')
-    kb.setHeading('Search')
-    kb.setHiddenInput(False)
-    kb.doModal()
-    if (kb.isConfirmed()):
-        search_term  = kb.getText()
-        return(search_term)
-    else:
-        return
+	kb = xbmc.Keyboard('default', 'heading')
+	kb.setDefault('')
+	kb.setHeading('Search')
+	kb.setHiddenInput(False)
+	kb.doModal()
+	if (kb.isConfirmed()):
+		search_term = kb.getText()
+		return (search_term)
+	else:
+		return
 
 
 #################################
@@ -82,39 +84,42 @@ def get_search():
 '''
 Create the list of video categories in the Kodi interface.
 '''
-def list_categories(_url, _handle, categories):
-    # Set plugin category. It is displayed in some skins as the name
-    # of the current section.
-    xbmcplugin.setPluginCategory(_handle, 'My Video Collection')
-    # Set plugin content. It allows Kodi to select appropriate views
-    # for this type of content.
-    xbmcplugin.setContent(_handle, 'videos')
-    # Get video categories
 
-    # Iterate through categories
-    for category in categories:
-        # Create a list item with a text label and a thumbnail image.
-        list_item = xbmcgui.ListItem(label=category['category'])
-        # Set additional info for the list item.
-        # Here we use a category name for both properties for for simplicity's sake.
-        # setInfo allows to set various information for an item.
-        # For available properties see the following link:
-        # https://codedocs.xyz/xbmc/xbmc/group__python__xbmcgui__listitem.html#ga0b71166869bda87ad744942888fb5f14
-        # 'mediatype' is needed for a skin to display info for this ListItem correctly.
-        list_item.setInfo('video', {'title': category['category'],
-                                    'genre': category['category'],
-                                    'mediatype': 'video'})
-        # Create a URL for a plugin recursive call.
-        # Example: plugin://plugin.video.example/?action=listing&category=Animals
-        url = get_url(_url, action='listing', category=category['category'], link=category['link'], page=1)
-        # is_folder = True means that this item opens a sub-list of lower level items.
-        is_folder = True
-        # Add our item to the Kodi virtual folder listing.
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
-    # Add a sort method for the virtual folder items (alphabetically, ignore articles)
-    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
-    # Finish creating a virtual folder.
-    xbmcplugin.endOfDirectory(_handle)
+
+def list_categories(_url, _handle, categories):
+	# Set plugin category. It is displayed in some skins as the name
+	# of the current section.
+	xbmcplugin.setPluginCategory(_handle, 'My Video Collection')
+	# Set plugin content. It allows Kodi to select appropriate views
+	# for this type of content.
+	xbmcplugin.setContent(_handle, 'videos')
+	# Get video categories
+
+	# Iterate through categories
+	for category in categories:
+		# Create a list item with a text label and a thumbnail image.
+		list_item = xbmcgui.ListItem(label=category['category'])
+		# Set additional info for the list item.
+		# Here we use a category name for both properties for for simplicity's sake.
+		# setInfo allows to set various information for an item.
+		# For available properties see the following link:
+		# https://codedocs.xyz/xbmc/xbmc/group__python__xbmcgui__listitem.html#ga0b71166869bda87ad744942888fb5f14
+		# 'mediatype' is needed for a skin to display info for this ListItem correctly.
+		list_item.setInfo('video', {'title': category['category'],
+									'genre': category['category'],
+									'mediatype': 'video'})
+		# Create a URL for a plugin recursive call.
+		# Example: plugin://plugin.video.example/?action=listing&category=Animals
+		url = get_url(_url, action='listing', category=category['category'],
+					  link=category['link'], page=1)
+		# is_folder = True means that this item opens a sub-list of lower level items.
+		is_folder = True
+		# Add our item to the Kodi virtual folder listing.
+		xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
+	# Add a sort method for the virtual folder items (alphabetically, ignore articles)
+	xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
+	# Finish creating a virtual folder.
+	xbmcplugin.endOfDirectory(_handle)
 
 
 #################################
@@ -123,17 +128,18 @@ def list_categories(_url, _handle, categories):
 '''
 Create the list of playable videos in the Kodi interface.
 '''
+
+
 def list_videos(_handle, _url, videos, link, category, next, page=1):
-    # Set plugin category. It is displayed in some skins as the name
-    # of the current section.
-    xbmcplugin.setPluginCategory(_handle, category)
-    # Set plugin content. It allows Kodi to select appropriate views
-    # for this type of content.
-    xbmcplugin.setContent(_handle, 'videos')
+	# Set plugin category. It is displayed in some skins as the name
+	# of the current section.
+	xbmcplugin.setPluginCategory(_handle, category)
+	# Set plugin content. It allows Kodi to select appropriate views
+	# for this type of content.
+	xbmcplugin.setContent(_handle, 'videos')
 
-
-    # Iterate through videos.
-    for video in videos:
+	# Iterate through videos.
+	for video in videos:
 		# set viewers Tag for sorting
 
 		title = '[' + video['views'] + '] ' + video['title']
@@ -149,25 +155,26 @@ def list_videos(_handle, _url, videos, link, category, next, page=1):
 									'duration': video['duration'],
 									'plot': plot,
 									'mediatype': 'video'})
-        # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for the list item.
-        # Here we use the same image for all items for simplicity's sake.
-        list_item.setArt({'thumb': video['thumb'], 'icon': video['thumb'], 'poster': video['thumb'], 'fanart': video['thumb']})
-        # Set 'IsPlayable' property to 'true'.
-        # This is mandatory for playable items!
-        list_item.setProperty('IsPlayable', 'true')
-        # Create a URL for a plugin recursive call.
-        # Example: plugin://plugin.video.example/?action=play&video=http://www.vidsplay.com/wp-content/uploads/2017/04/crab.mp4
+		# Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for the list item.
+		# Here we use the same image for all items for simplicity's sake.
+		list_item.setArt({'thumb': video['thumb'], 'icon': video['thumb'],
+						  'poster': video['thumb'], 'fanart': video['thumb']})
+		# Set 'IsPlayable' property to 'true'.
+		# This is mandatory for playable items!
+		list_item.setProperty('IsPlayable', 'true')
+		# Create a URL for a plugin recursive call.
+		# Example: plugin://plugin.video.example/?action=play&video=http://www.vidsplay.com/wp-content/uploads/2017/04/crab.mp4
 
-        url = get_url(_url, action='play', link=video['link'])
-        # Add the list item to a virtual Kodi folder.
-        # is_folder = False means that this item won't open any sub-list.
-        is_folder = False
-        # Add our item to the Kodi virtual folder listing.
-        xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
+		url = get_url(_url, action='play', link=video['link'])
+		# Add the list item to a virtual Kodi folder.
+		# is_folder = False means that this item won't open any sub-list.
+		is_folder = False
+		# Add our item to the Kodi virtual folder listing.
+		xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
 
-    ##############################################
-    #                Next
-    if next == True:
+	##############################################
+	#                Next
+	if next == True:
 		list_item = xbmcgui.ListItem(label='Next')
 
 		url = get_url(_url, action='next', link=link, page=page,
